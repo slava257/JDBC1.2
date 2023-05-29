@@ -67,14 +67,14 @@ public class Application {
     private static void fullEmployee() throws SQLException {
         System.out.println("Все сотрудники");
         for (Employee employee : employeeDAO.fullFindByEmployee()) {
-            System.out.println(" id: " + employee.getId() + " Имя сотрудника: " + employee.getFirstName() + " Фамилия сотрудника: " + employee.getLastName() + " Пол: " + employee.getGender() + " Возраст: " + employee.getGender() + " Город: " + employee.getCityId());
+            System.out.println(" id: " + employee.getId() + " Имя сотрудника: " + employee.getFirstName() + " Фамилия сотрудника: " + employee.getLastName() + " Пол: " + employee.getGender() + " Возраст: " + employee.getGender() + "Номер город: " + employee.getCityId());
         }
     }
 
     private static void findById(Scanner scanner) {
         while (true) {
             try {
-                System.out.println("Выберети сотрудника для получения");
+                System.out.println("Выберете сотрудника для получения");
                 String idLine = scanner.nextLine();
                 int id = Integer.parseInt(idLine);
                 System.out.println(employeeDAO.findById(id));
@@ -90,7 +90,7 @@ public class Application {
         while (true) {
             try {
                 fullEmployee();
-                System.out.println("Выберети сотрудника для удаления");
+                System.out.println("Выберете сотрудника для удаления");
                 String idLine = scanner.nextLine();
                 int id = Integer.parseInt(idLine);
                 employeeDAO.deleteById(id);
