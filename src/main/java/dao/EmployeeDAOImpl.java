@@ -1,5 +1,6 @@
 package dao;
 
+import model.City;
 import model.Employee;
 
 import java.sql.*;
@@ -31,13 +32,13 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     public void addEmployee(Employee employee) {
-        try (PreparedStatement preparedStatement = getConnection().prepareStatement("INSERT INTO employee(first_name,last_name,gender,age,city_id) VALUES ( ?, ?, ?, ?, ?)")) {
+        try (PreparedStatement preparedStatement = getConnection().prepareStatement("INSERT INTO employee(first_name,last_name,gender,age,city_id) VALUES ( ?, ?, ?, ?, ? )")) {
 
             preparedStatement.setString(1, employee.getFirstName());
             preparedStatement.setString(2, employee.getLastName());
             preparedStatement.setString(3, employee.getGender());
             preparedStatement.setInt(4, employee.getAge());
-            preparedStatement.setInt(5, employee.getCityId());
+            preparedStatement.setString(5, String.valueOf(employee.getCity().getCity_id()));
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -46,7 +47,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     public Employee findById(Integer id) {
-        try (PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM employee WHERE id = (?)")) {
+        try (PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM employee INNER JOIN city ON city.city_id = employee.city_id WHERE id = (?)")) {
             preparedStatement.setInt(1, id);
             preparedStatement.setMaxRows(1);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -62,7 +63,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     @Override
     public List<Employee> fullFindByEmployee() {
         List<Employee> employeeList = new ArrayList<>();
-        try (PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM employee")) {
+        try (PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT * FROM employee INNER JOIN city ON city.city_id = employee.city_id")) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 employeeList.add(Employee.findById(resultSet));
@@ -75,14 +76,15 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     public void toChange(Employee employee) {
-        try (PreparedStatement preparedStatement = getConnection().prepareStatement("UPDATE employee SET first_name = (?),last_name= (?),gender= (?),age= (?),city_id= (?)  WHERE id = (?)")) {
+        try (PreparedStatement preparedStatement = getConnection().prepareStatement("UPDATE employee SET first_name = (?),last_name= (?),gender= (?),age= (?),city_id= (?)   WHERE id = (?)")) {
             preparedStatement.setInt(6, employee.getId());
             preparedStatement.setString(1, employee.getFirstName());
             preparedStatement.setString(2, employee.getLastName());
             preparedStatement.setString(3, employee.getGender());
             preparedStatement.setInt(4, employee.getAge());
-            preparedStatement.setInt(5, employee.getCityId());
+            preparedStatement.setString(5, String.valueOf(employee.getCity().getCity_id()));
             preparedStatement.executeUpdate();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

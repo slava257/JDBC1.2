@@ -1,4 +1,5 @@
 import dao.EmployeeDAOImpl;
+import model.City;
 import model.Employee;
 import model.Resume;
 
@@ -67,7 +68,7 @@ public class Application {
     private static void fullEmployee() throws SQLException {
         System.out.println("Все сотрудники");
         for (Employee employee : employeeDAO.fullFindByEmployee()) {
-            System.out.println(" id: " + employee.getId() + " Имя сотрудника: " + employee.getFirstName() + " Фамилия сотрудника: " + employee.getLastName() + " Пол: " + employee.getGender() + " Возраст: " + employee.getGender() + "Номер город: " + employee.getCityId());
+            System.out.println(employee);
         }
     }
 
@@ -109,8 +110,9 @@ public class Application {
         String gender = exceptionString("пол", scanner);
         int age = Integer.parseInt(exceptionString("Возраст", scanner));
         Integer cityId = Integer.valueOf(exceptionString("Номер города", scanner));
-        Employee employee = new Employee(null, firstName, lastName, gender, age, cityId);
-        employeeDAO.addEmployee(new Employee(null, employee.getFirstName(), employee.getLastName(), employee.getGender(), employee.getAge(), employee.getCityId()));
+        City city = new City(Integer.parseInt(exceptionString("номер города", scanner)), exceptionString("город", scanner));
+        Employee employee = new Employee(null, firstName, lastName, gender, age, cityId, city);
+        employeeDAO.addEmployee(new Employee(null, employee.getFirstName(), employee.getLastName(), employee.getGender(), employee.getAge(), employee.getCityId(), new City(city.getCity_id(), city.getCity_name())));
     }
 
     private static void receiveEmployee(Scanner scanner) {
@@ -120,8 +122,9 @@ public class Application {
         String gender = exceptionString("пол", scanner);
         int age = Integer.parseInt(exceptionString("Возраст", scanner));
         Integer cityId = Integer.valueOf(exceptionString("Номер города", scanner));
-        Employee employee = new Employee(id, firstName, lastName, gender, age, cityId);
-        employeeDAO.toChange(new Employee(employee.getId(), employee.getFirstName(), employee.getLastName(), employee.getGender(), employee.getAge(), employee.getCityId()));
+        City city = new City(Integer.parseInt(exceptionString("номер города", scanner)), exceptionString("город", scanner));
+        Employee employee = new Employee(id, firstName, lastName, gender, age, cityId, city);
+        employeeDAO.toChange(new Employee(employee.getId(), employee.getFirstName(), employee.getLastName(), employee.getGender(), employee.getAge(), employee.getCityId(), new City(city.getCity_id(), city.getCity_name())));
     }
 
     private static Resume resume(Scanner scanner) {
