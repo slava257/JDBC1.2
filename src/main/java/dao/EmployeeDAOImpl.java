@@ -1,15 +1,11 @@
 package dao;
 
-import connect.Connect;
 import lombok.NoArgsConstructor;
-import model.City;
 import model.Employee;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 //1. Создать классы Employee и City с полями, аналогично созданным таблицам.
@@ -26,46 +22,21 @@ import java.util.List;
 public class EmployeeDAOImpl implements EmployeeDAO {
 
     public void addEmployee(Employee employee) {
-        try (PreparedStatement preparedStatement = Connect.getConnection().prepareStatement("INSERT INTO employee(first_name,last_name,gender,age,city_id) VALUES ( ?, ?, ?, ?, ?)")) {
-
-            preparedStatement.setString(1, employee.getFirstName());
-            preparedStatement.setString(2, employee.getLastName());
-            preparedStatement.setString(3, employee.getGender());
-            preparedStatement.setInt(4, employee.getAge());
-            preparedStatement.setInt(5, employee.getCityId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.save(employee);
+            transaction.commit();
         }
     }
 
     @Override
     public Employee findById(Integer id) {
-        try (PreparedStatement preparedStatement = Connect.getConnection().prepareStatement("SELECT * FROM employee INNER JOIN city ON city.city_id = employee.city_id WHERE id = (?)")) {
-            preparedStatement.setInt(1, id);
-            preparedStatement.setMaxRows(1);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return Employee.findById(resultSet);
-            }
-            return null;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Employee.class, id);
     }
 
     @Override
     public List<Employee> fullFindByEmployee() {
-        List<Employee> employeeList = new ArrayList<>();
-        try (PreparedStatement preparedStatement = Connect.getConnection().prepareStatement("SELECT * FROM employee INNER JOIN city ON city.city_id = employee.city_id")) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                employeeList.add(Employee.findById(resultSet));
-            }
-            return employeeList;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return (List<Employee>) HibernateSessionFactoryUtil.getSessionFactory().openSession().createQuery("FROM Employee").list();
     }
 
     @Override
@@ -78,7 +49,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     }
 
     @Override
-    public void deleteById(Employee employee) {
+    public void delete(Employee employee) {
         try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
             session.delete(employee);

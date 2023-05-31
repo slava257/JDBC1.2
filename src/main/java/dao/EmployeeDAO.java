@@ -15,7 +15,7 @@ public interface EmployeeDAO {
 
     void toChange(Employee employee);
 
-    void deleteById(Employee employee);
+    void delete(Employee employee);
 
 
 }

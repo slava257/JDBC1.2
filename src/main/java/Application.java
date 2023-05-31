@@ -1,10 +1,11 @@
-import connect.Connect;
 import dao.EmployeeDAOImpl;
+import dao.HibernateSessionFactoryUtil;
 import model.City;
 import model.Employee;
 import model.Resume;
 
 import java.sql.*;
+
 import java.util.Scanner;
 
 //### Задание 1
@@ -18,28 +19,17 @@ import java.util.Scanner;
 public class Application {
     private static final EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl();
 
-
-    public String findById(Integer id) {
-        try (PreparedStatement preparedStatement = Connect.getConnection().prepareStatement("SELECT last_name,gender,first_name,city_name FROM employee INNER JOIN city ON city.city_id = employee.city_id WHERE id = (?)")) {
-            preparedStatement.setInt(1, id);
-            preparedStatement.setMaxRows(1);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            String firstName = "Имя: " + resultSet.getString("first_name");
-            String lastName = "Фамилия: " + resultSet.getString("last_name");
-            String gender = "Пол: " + resultSet.getString("gender");
-            String cityName = "Город: " + resultSet.getString("city_name");
-            return firstName + "\n" + lastName + "\n" + gender + "\n" + cityName;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public Employee findById1(Integer id) {
+        return HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Employee.class, id);
     }
+
 
     public static void main(String[] args) throws SQLException {
         Scanner sc = new Scanner(System.in);
         localizeResume(sc);
 
     }
+
 
     public static String exceptionString(String message, Scanner scanner) {
         while (true) {
@@ -77,7 +67,7 @@ public class Application {
         }
     }
 
-    private static void deleteById(Scanner scanner) {
+    private static void delete(Scanner scanner) {
         while (true) {
             try {
                 fullEmployee();
@@ -89,7 +79,7 @@ public class Application {
                 int age = Integer.parseInt(exceptionString("Возраст", scanner));
                 int cityId = Integer.parseInt(exceptionString("номер города", scanner));
                 Employee employee1 = new Employee(id, firstName, lastName, gender, age, cityId);
-                employeeDAO.deleteById(employee1);
+                employeeDAO.delete(employee1);
                 break;
             } catch (NumberFormatException e) {
                 System.out.println("введено не верное значение");
@@ -104,7 +94,7 @@ public class Application {
         String lastName = exceptionString("Фамилия сотрудника", scanner);
         String gender = exceptionString("пол", scanner);
         int age = Integer.parseInt(exceptionString("Возраст", scanner));
-        int cityId = new City(Integer.parseInt(exceptionString("номер города", scanner)), exceptionString("город", scanner)).getCity_id();
+        int cityId = new City(Integer.parseInt(exceptionString("номер города", scanner)), exceptionString("город", scanner)).getCityId();
         Employee employee = new Employee(null, firstName, lastName, gender, age, cityId);
         employeeDAO.addEmployee(new Employee(null, employee.getFirstName(), employee.getLastName(), employee.getGender(), employee.getAge(), employee.getCityId()));
     }
@@ -154,7 +144,7 @@ public class Application {
         while (true) {
             System.out.println("Введите команду");
             switch (resume(scanner)) {
-                case DELETE_EMPLOYEE -> deleteById(scanner);
+                case DELETE_EMPLOYEE -> delete(scanner);
                 case ADD_EMPLOYEE -> addEmployee(scanner);
                 case RECEIVE_EMPLOYEE -> findById(scanner);
                 case UPDATE_EMPLOYEE -> receiveEmployee(scanner);
