@@ -5,8 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="424a1abe-8f90-43bc-bb2a-beaffa2a4739" name="Changes" comment="JDBC">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/connect/Connect.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/HibernateSessionFactoryUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/hibernate.cfg.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dao/EmployeeDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/EmployeeDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dao/EmployeeDAOImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/EmployeeDAOImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/model/City.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/City.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/model/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Employee.java" afterDir="false" />
@@ -20,8 +26,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
-        <option value="Class" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -62,8 +68,10 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
-      <recent name="model" />
+      <recent name="dao" />
+      <recent name="" />
       <recent name="java" />
+      <recent name="model" />
     </key>
     <key name="ExtractSuperBase.RECENT_KEYS">
       <recent name="" />
@@ -105,7 +113,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1685272490780</updated>
-      <workItem from="1685272500919" duration="50368000" />
+      <workItem from="1685272500919" duration="66365000" />
     </task>
     <task id="LOCAL-00001" summary="JDBC">
       <created>1685387469148</created>
@@ -121,7 +129,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685387819519</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="JDBC">
+      <created>1685402856837</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1685402856837</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

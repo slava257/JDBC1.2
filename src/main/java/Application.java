@@ -1,3 +1,4 @@
+import connect.Connect;
 import dao.EmployeeDAOImpl;
 import model.City;
 import model.Employee;
@@ -17,20 +18,9 @@ import java.util.Scanner;
 public class Application {
     private static final EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl();
 
-    private Connection getConnection() {
-        final String user = "postgres";
-        final String password = "last1379";
-        final String url = "jdbc:postgresql://localhost:5432/skypro";
-        try {
-            return DriverManager.getConnection(url, user, password);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public String findById(Integer id) {
-        getConnection();
-        try (PreparedStatement preparedStatement = getConnection().prepareStatement("SELECT last_name,gender,first_name,city_name FROM employee INNER JOIN city ON city.city_id = employee.city_id WHERE id = (?)")) {
+        try (PreparedStatement preparedStatement = Connect.getConnection().prepareStatement("SELECT last_name,gender,first_name,city_name FROM employee INNER JOIN city ON city.city_id = employee.city_id WHERE id = (?)")) {
             preparedStatement.setInt(1, id);
             preparedStatement.setMaxRows(1);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -92,9 +82,14 @@ public class Application {
             try {
                 fullEmployee();
                 System.out.println("Выберете сотрудника для удаления");
-                String idLine = scanner.nextLine();
-                int id = Integer.parseInt(idLine);
-                employeeDAO.deleteById(id);
+                Integer id = Integer.valueOf(exceptionString("id", scanner));
+                String firstName = exceptionString("Имя сотрудника", scanner);
+                String lastName = exceptionString("Фамилия сотрудника", scanner);
+                String gender = exceptionString("пол", scanner);
+                int age = Integer.parseInt(exceptionString("Возраст", scanner));
+                int cityId = Integer.parseInt(exceptionString("номер города", scanner));
+                Employee employee1 = new Employee(id, firstName, lastName, gender, age, cityId);
+                employeeDAO.deleteById(employee1);
                 break;
             } catch (NumberFormatException e) {
                 System.out.println("введено не верное значение");
@@ -109,10 +104,9 @@ public class Application {
         String lastName = exceptionString("Фамилия сотрудника", scanner);
         String gender = exceptionString("пол", scanner);
         int age = Integer.parseInt(exceptionString("Возраст", scanner));
-        Integer cityId = Integer.valueOf(exceptionString("Номер города", scanner));
-        City city = new City(Integer.parseInt(exceptionString("номер города", scanner)), exceptionString("город", scanner));
-        Employee employee = new Employee(null, firstName, lastName, gender, age, cityId, city);
-        employeeDAO.addEmployee(new Employee(null, employee.getFirstName(), employee.getLastName(), employee.getGender(), employee.getAge(), employee.getCityId(), new City(city.getCity_id(), city.getCity_name())));
+        int cityId = new City(Integer.parseInt(exceptionString("номер города", scanner)), exceptionString("город", scanner)).getCity_id();
+        Employee employee = new Employee(null, firstName, lastName, gender, age, cityId);
+        employeeDAO.addEmployee(new Employee(null, employee.getFirstName(), employee.getLastName(), employee.getGender(), employee.getAge(), employee.getCityId()));
     }
 
     private static void receiveEmployee(Scanner scanner) {
@@ -121,10 +115,9 @@ public class Application {
         String lastName = exceptionString("Фамилия сотрудника", scanner);
         String gender = exceptionString("пол", scanner);
         int age = Integer.parseInt(exceptionString("Возраст", scanner));
-        Integer cityId = Integer.valueOf(exceptionString("Номер города", scanner));
-        City city = new City(Integer.parseInt(exceptionString("номер города", scanner)), exceptionString("город", scanner));
-        Employee employee = new Employee(id, firstName, lastName, gender, age, cityId, city);
-        employeeDAO.toChange(new Employee(employee.getId(), employee.getFirstName(), employee.getLastName(), employee.getGender(), employee.getAge(), employee.getCityId(), new City(city.getCity_id(), city.getCity_name())));
+        int cityId = Integer.parseInt(exceptionString("Номер города", scanner));
+        Employee employee = new Employee(id, firstName, lastName, gender, age, cityId);
+        employeeDAO.toChange(employee);
     }
 
     private static Resume resume(Scanner scanner) {
