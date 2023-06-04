@@ -1,0 +1,6 @@
+package model;
+
+public enum Resume {
+    DELETE_EMPLOYEE, ADD_EMPLOYEE, RECEIVE_EMPLOYEE, UPDATE_EMPLOYEE, FULL_EMPLOYEE, EXIT
+
+}
