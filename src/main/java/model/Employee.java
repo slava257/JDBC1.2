@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 
 
 import javax.persistence.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+
 import java.util.Objects;
 //### Задание 1
 //
@@ -26,7 +26,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Employee")
+@Table(name = "employee")
 public class Employee {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
@@ -43,20 +43,21 @@ public class Employee {
     @Column(name = "age")
     private int age;
 
-    @Column(name = "city_id")
-    private int cityId;
 
+    @ManyToOne
+    @JoinColumn(name = "city_id")
+    private City city;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return age == employee.age && cityId == employee.cityId && Objects.equals(id, employee.id) && Objects.equals(firstName, employee.firstName) && Objects.equals(lastName, employee.lastName) && Objects.equals(gender, employee.gender);
+        return age == employee.age && city == employee.city && Objects.equals(id, employee.id) && Objects.equals(firstName, employee.firstName) && Objects.equals(lastName, employee.lastName) && Objects.equals(gender, employee.gender);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, gender, age, cityId);
+        return Objects.hash(id, firstName, lastName, gender, age, city);
     }
 }

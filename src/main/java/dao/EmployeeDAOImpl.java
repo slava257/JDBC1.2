@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import model.Employee;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import util.HibernateSessionFactoryUtil;
 
 
 import java.util.List;
@@ -26,17 +27,22 @@ public class EmployeeDAOImpl implements EmployeeDAO {
             Transaction transaction = session.beginTransaction();
             session.save(employee);
             transaction.commit();
+
         }
     }
 
     @Override
     public Employee findById(Integer id) {
-        return HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Employee.class, id);
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+            return session.get(Employee.class, id);
+        }
     }
 
     @Override
     public List<Employee> fullFindByEmployee() {
-        return (List<Employee>) HibernateSessionFactoryUtil.getSessionFactory().openSession().createQuery("FROM Employee").list();
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Employee").list();
+        }
     }
 
     @Override
@@ -54,6 +60,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
             Transaction transaction = session.beginTransaction();
             session.delete(employee);
             transaction.commit();
+
         }
 
     }
